@@ -1,5 +1,6 @@
 package com.mobin.thread.Queue;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -14,6 +15,7 @@ public class MyPriorityQueue {
         queue.add(4);
         queue.add(4);
         queue.add(3);
+        Arrays.asList();
         while (queue.size() > 0){
             System.out.println(queue.remove());
         }

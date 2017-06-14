@@ -44,7 +44,6 @@ public class ReadWriteLock {
                 lock.writeLock().unlock();
             }
         }
-
         public void get(){
             lock.readLock().lock();;
             System.out.println(Thread.currentThread().getName()+"准备读数据");

@@ -13,7 +13,7 @@ import java.util.concurrent.*;
  */
 public class FileSearchExecutor {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        String path = "E:\\DATA\\PUBLIC\\NOCE\\AGG\\AGG_MRO_CHR_RELATE\\day=20161020\\hour=2016102011\\vendor=ERS\\10";
+        String path = "E:\\DATA\\PUBLIC\\NOCE\\ETL\\ETL_CHR_L_MM\\20161020\\2016102011";
         String keyword = "mobin";
         int c = 0;
         File[] files = new File(path).listFiles();

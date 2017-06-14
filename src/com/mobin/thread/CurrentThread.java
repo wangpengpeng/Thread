@@ -1,7 +1,5 @@
 package com.mobin.thread;
 
-import java.util.Arrays;
-
 /**
  * Created by Mobin on 2016/3/3.
  * 关于CurrentThread的点
