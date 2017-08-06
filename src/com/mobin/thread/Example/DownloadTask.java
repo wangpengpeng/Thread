@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,8 +41,21 @@ public class DownloadTask implements Runnable {
         ReadableByteChannel channel = null;
         try {
             channel = Channels.newChannel(issueRequest(requestURL, lowerBound, upperBound));
+            ByteBuffer buf = ByteBuffer.allocate(1024);
+            while (!cancelFlag.get() && channel.read(buf) > 0){
+                xbuf.write(buf); //将数据写入缓冲区
+                buf.clear();
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                channel.close();
+                xbuf.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

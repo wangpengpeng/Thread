@@ -50,14 +50,74 @@ public class BigFileDownloader {
         requestURL = new URL(strURL);
         fileSize = retiveFileSize(requestURL);
         log.info("file total size: %s", fileSize);
-        String fileName = strURL.substring(strURL.lastIndexOf("/") + 1);
+        //String fileName = strURL.substring(strURL.lastIndexOf("/") + 1);
+        String fileName = "mobin.flv";
         storage = new Storage(fileSize, fileName);
     }
 
-    public void download(int taskCount, long reportInterval){
+    public void download(int taskCount, long reportInterval) throws InterruptedException {
+        long chunkSizePerThread = fileSize / taskCount;
         long lowerBound = 0; //下载数据段的起始字节
         long upperBound = 0;//下载数据段的结束字节
+        DownloadTask dt;
+        for (int i = (taskCount -1);  i >= 0; i ++){
+            lowerBound = i * chunkSizePerThread;
+            if (i == taskCount -1) {
+                upperBound = fileSize;
+            } else {
+                upperBound = lowerBound + chunkSizePerThread -1;
+            }
+            //创建下载任务
+            dt = new DownloadTask(lowerBound, upperBound, requestURL,storage, taskCanceled);
+            dispatchWork(dt, i);
+        }
+       //定时报告下载进度
+        reportProgress(reportInterval);
+        storage.close();
+    }
 
+    private void reportProgress(long reportInterval) throws InterruptedException {
+        float lastComplection;
+        int complection = 0;
+        while (!taskCanceled.get()){
+            lastComplection = complection;
+            complection = (int)(storage.getTotalWrites() * 100 /fileSize);
+            if (complection == 100) {
+                break;
+            } else if (complection - lastComplection >= 1){
+                log.info("Complection:%s%%", complection);
+                if (complection > 90) {
+                    reportInterval = 1000;
+                }
+            }
+            Thread.sleep(reportInterval);
+        }
+
+        log.info("Complection:%s%%",complection);
+    }
+
+    private void dispatchWork(final DownloadTask dt, int workerIndex) {
+        //创建下载线程
+        Thread wordThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    dt.run();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    //取消整个文件的下载
+                    cancelDownload();
+                }
+            }
+        });
+        wordThread.setName("downloader-" +workerIndex );
+        wordThread.start();
+    }
+
+    private void cancelDownload() {
+        if (taskCanceled.compareAndSet(false, true)) {
+            storage.close();
+        }
     }
 
     private static long retiveFileSize(URL requestURL) throws Exception {

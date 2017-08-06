@@ -3,10 +3,7 @@ package com.mobin.thread.Example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,14 +11,14 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by Mobin on 2017/8/5.
  */
-public class Storage {
+public class Storage implements Closeable, AutoCloseable{
     private final RandomAccessFile storeFile;
     private final FileChannel storeChannel;
     protected final AtomicLong totalWrites = new AtomicLong(0);
     private static final Logger log = LoggerFactory.getLogger(Storage.class);
 
     public Storage(long fileSize,String fileShortName) throws FileNotFoundException {
-        String fullFileName = System.getProperty("java.io.tmp.dir") + "/" + fileShortName;
+        String fullFileName = "F:" + "/" + fileShortName;
         String localFileName = createStoreFile(fileSize, fullFileName);
         storeFile = new RandomAccessFile(localFileName, "rw");
         storeChannel = storeFile.getChannel();
@@ -52,6 +49,20 @@ public class Storage {
                 raf.close();
             } catch (IOException e) {
             }
+        }
+        return fullFileName;
+    }
+
+    @Override
+    public void close() {
+        if (storeChannel.isOpen()) {
+            try {
+                storeChannel.close();
+                storeFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
