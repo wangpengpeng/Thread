@@ -1,4 +1,4 @@
-package com.mobin.thread;
+package com.mobin.thread.Lock;
 
 import java.util.HashMap;
 import java.util.Map;

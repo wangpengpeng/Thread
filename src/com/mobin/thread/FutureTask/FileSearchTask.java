@@ -17,8 +17,8 @@ import java.util.concurrent.FutureTask;
  */
 public class FileSearchTask {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        String path = args[0];
-        String keyword = args[1];
+        String path = "E:\\test";
+        String keyword = "a1";
         int c = 0;
         File[] files = new File(path).listFiles();
         ArrayList<Future<Integer>> rs = new ArrayList<>();

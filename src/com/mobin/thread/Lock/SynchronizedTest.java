@@ -1,4 +1,4 @@
-package com.mobin.thread;
+package com.mobin.thread.Lock;
 
 /**
  * Created by Mobin on 2016/3/20.

@@ -1,4 +1,4 @@
-package com.mobin.thread;
+package com.mobin.thread.Lock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,12 +9,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LockTest {
 
     public static  void init(){
+        final Outprint outprint= new Outprint();
         new Thread(new Runnable() {
             public void run() {
                 try {
                     while (true) {
                         Thread.sleep(2000);
-                        Outprint.out("hadoop");
+                        outprint.out("hadoop");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -29,7 +30,7 @@ public class LockTest {
                 try {
                     while (true) {
                         Thread.sleep(2000);
-                        Outprint.out("spark");
+                        outprint.out("spark");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -40,8 +41,8 @@ public class LockTest {
     }
 
     static  class Outprint{
-        public static  void out(String str) {
-            Lock lock = new ReentrantLock();
+        Lock lock = new ReentrantLock();
+        public   void out(String str) {
             lock.lock();
             try {
                 for (int i = 0; i < str.length(); i++) {
