@@ -16,11 +16,11 @@ public class CurrentThread {
     }
 }
 
+
 class  Other extends  Thread{
     @Override
     public void run() {
         System.out.println("当前线程的名字："+this.getName());
         System.out.println("当前线程的名字："+this.currentThread().getName());
-
     }
 }

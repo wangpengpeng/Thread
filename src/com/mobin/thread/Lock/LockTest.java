@@ -11,6 +11,7 @@ public class LockTest {
     public static  void init(){
         final Outprint outprint= new Outprint();
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     while (true) {
@@ -21,11 +22,12 @@ public class LockTest {
                     e.printStackTrace();
                 }
             }
-        }
-        ).start();
+        },
+        "t1").start();
 
 
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     while (true) {
@@ -37,7 +39,16 @@ public class LockTest {
                 }
             }
         }
-        ).start();
+        ,"t2").start();
+
+        new Thread(()->{
+            try {
+                Thread.sleep(3000);
+                outprint.out("spark");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        },"t3").start();
     }
 
     static  class Outprint{

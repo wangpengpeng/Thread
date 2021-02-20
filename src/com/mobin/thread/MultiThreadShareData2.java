@@ -18,6 +18,7 @@ public class MultiThreadShareData2 {
         count --;
         System.out.println("线程进行了减操作"+count);
     }
+
     public static void main(String[] args){
         MultiThreadShareData2 multiThreadShareData2 = new MultiThreadShareData2();
         for(int i = 0; i < 5; i ++) {
